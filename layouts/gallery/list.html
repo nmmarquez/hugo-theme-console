@@ -3,11 +3,11 @@
 {{ .Content }}
 <div class="image-grid">
     {{ range sort .Data.Pages "Date" "desc" }}
-        {{ if and (isset .Params "image") .Params.image }}
+        {{ if and (isset .Params "images") .Params.images }}
             <a href="{{ .Permalink }}" title="{{ .Title }}">
-            {{ $image := .Page.Resources.GetMatch .Params.image }}
+            {{ $image := .Page.Resources.GetMatch (index .Params.images 0).image }}
             {{ with $image }}
-                {{ $thumb := .Resize "400x" }}
+                {{ $thumb := .Resize "400x400" }}
                 <img src="{{ $thumb.RelPermalink }}" alt="{{ .Title }}" class="img-responsive">
             {{end}}
             </a>

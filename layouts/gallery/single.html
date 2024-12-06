@@ -1,13 +1,22 @@
 {{ define "main" }}
 <h1>{{ .Page.Title }}</h1>
 
-{{ if and (isset .Params "image") .Params.image }}
-    {{ $image := .Page.Resources.GetMatch .Params.image }}
-    {{ with $image }}
-        {{ $thumb := .Resize "1000x" }}
-        {{ printf `<img src="%s" alt="%s" class="img-responsive gallery-image">` $thumb.RelPermalink .Title | safeHTML }}
-    {{end}}
+{{ partial "carousel.html" (dict "context" . "items" "1" "height" "100" "unit" "%" "duration" "7000") }}
+{{ .PublishDate.Format "Jan. 2, 2006" }}
+<!-- tags -->
+{{ with .Params.tags }}
+    {{ $total := len . }}
+    {{ if gt $total 0 }}
+        <!-- <br/> -->
+        {{ $subtotal := sub $total 1 }} &nbsp; <i class="fas fa-tags"></i>
+        {{ range $i, $tag := . }}
+        <a class="badge badge-tag" href="{{ "/tags/" | relURL }}{{ $tag | urlize }}">{{ $tag | lower }}</a>
+        {{ if lt $i $subtotal }} {{ end }}
+    {{ end }}
+    {{ end }}
 {{ end }}
+{{ $add_url := printf "https://www.google.com/maps/place/%s" (replace .Params.address " " "+")}}
+<i class="fa-solid fa-map-location"></i><a href="{{ $add_url }}">{{.Params.address}}</a>
 
 {{ .Content }}
 {{ template "_internal/disqus.html" . }}
